@@ -15,6 +15,7 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"Escobar Property Services, LLC","description":"Professional pressure washing, gutter cleaning, soft washing, painting and home services. Metro Atlanta since 2018.","url":"https://escobarps.com","telephone":"+16784882716","email":"info@escobarps.com","address":{"@type":"PostalAddress","streetAddress":"PO Box 1252","addressLocality":"Lilburn","addressRegion":"GA","postalCode":"30048","addressCountry":"US"},"openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"07:00","closes":"20:00"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"5","reviewCount":"42"},"priceRange":"$$","sameAs":["https://www.facebook.com/p/Escobar-Property-Services-LLC-100083396886480/","https://www.instagram.com/escobar_property_services/"]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -398,8 +399,8 @@ footer ul li a:hover{color:rgba(255,255,255,.85)}
           </div>
         </div>
         <div class="field">
-          <label>Email Address</label>
-          <input type="email" name="email" placeholder="john@email.com">
+          <label>Email Address *</label>
+          <input type="email" name="email" placeholder="john@email.com" required>
         </div>
         <div class="field">
           <label>Service Needed *</label>
@@ -417,8 +418,11 @@ footer ul li a:hover{color:rgba(255,255,255,.85)}
           </select>
         </div>
         <div class="field">
-          <label>Property Address</label>
-          <textarea name="message" placeholder="Street address or notes about your project..."></textarea>
+          <label>Property Address / Notes *</label>
+          <textarea name="message" placeholder="Street address or notes about your project..." required></textarea>
+        </div>
+        <div style="margin:14px 0;transform:scale(0.95);transform-origin:left">
+          <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
         </div>
         <button type="submit" class="btn-submit">Get My Free Estimate →</button>
         <p class="form-guarantee">🔒 No spam ever. We'll call or text you shortly.</p>
@@ -882,6 +886,10 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
 document.getElementById('leadForm').addEventListener('submit',async e=>{
   e.preventDefault();
   const btn=e.target.querySelector('.btn-submit');
+  if(!grecaptcha.getResponse()){
+    alert('Please confirm you\'re not a robot.');
+    return;
+  }
   btn.textContent='Sending...';btn.disabled=true;
   const fd=new FormData(e.target);
   const lead={name:fd.get('name'),phone:fd.get('phone'),email:fd.get('email')||'',service:fd.get('service'),message:fd.get('message')||''};
