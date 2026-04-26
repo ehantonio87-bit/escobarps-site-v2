@@ -275,13 +275,28 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
   e.preventDefault();
   const btn = this.querySelector('button[type=submit]');
   btn.textContent = 'Sending...'; btn.disabled = true;
-  const data = Object.fromEntries(new FormData(this));
+  const lead = Object.fromEntries(new FormData(this));
   try {
-    await fetch(SUPABASE_URL + '/rest/v1/eps_leads', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Prefer':'return=minimal'},
-      body: JSON.stringify(data)
-    });
+    await Promise.all([
+      fetch(SUPABASE_URL + '/rest/v1/eps_leads', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Prefer':'return=minimal'},
+        body: JSON.stringify(lead)
+      }),
+      fetch('https://formsubmit.co/ajax/info@escobarps.com', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json','Accept':'application/json'},
+        body: JSON.stringify({
+          _subject: '🔔 New Lead - EPS Website',
+          _template: 'table',
+          name: lead.name,
+          phone: lead.phone,
+          email: lead.email || 'Not provided',
+          service: lead.service || 'Not specified',
+          notes: lead.message || '—'
+        })
+      })
+    ]);
   } catch(err) {}
   document.getElementById('formSuccess').style.display = 'block';
   this.style.display = 'none';
