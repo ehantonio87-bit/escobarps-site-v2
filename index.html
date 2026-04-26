@@ -134,20 +134,26 @@ section{padding:80px 0}
 .section-sub{font-size:16px;color:#64748b;line-height:1.75;max-width:560px}
 .text-center{text-align:center}.text-center .section-sub{margin:0 auto}
 
+/* ── SERVICE NAV ── */
+.svc-nav{display:flex;gap:10px;overflow-x:auto;padding:0 0 4px;margin-top:36px;margin-bottom:8px;scrollbar-width:none;-ms-overflow-style:none}
+.svc-nav::-webkit-scrollbar{display:none}
+.svc-tab{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;padding:10px 20px;border-radius:50px;border:2px solid #e2e8f0;background:#fff;color:#475569;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:all .2s;flex-shrink:0}
+.svc-tab:hover,.svc-tab.active{background:#1a3c5e;border-color:#1a3c5e;color:#fff}
 /* ── SERVICES ── */
 .services-bg{background:#f8fafc}
-.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:52px}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:28px}
 .service-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1px solid #e2e8f0;transition:all .3s;group}
 .service-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,.12);border-color:#1a3c5e}
 .service-card-img{height:180px;background-size:cover;background-position:center;position:relative;overflow:hidden}
 .service-card-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(26,60,94,.7))}
 .service-card-img-label{position:absolute;bottom:12px;left:16px;color:#fff;font-size:18px;font-weight:800;z-index:1;text-shadow:0 2px 8px rgba(0,0,0,.4)}
 .service-img-1{background-image:url('images/svc1.jpg')}
-.service-img-2{background-image:url('images/svc2.jpg')}
-.service-img-3{background-image:url('images/svc3.jpg')}
-.service-img-4{background-image:url('https://images.unsplash.com/photo-1527515545081-5db817172677?w=600&q=80')}
-.service-img-5{background-image:url('images/svc5.jpg')}
-.service-img-6{background-image:url('images/svc6.jpg')}
+.service-img-2{background-image:url('images/svc1.jpg');background-position:right center}
+.service-img-3{background-image:url('images/svc2.jpg')}
+.service-img-4{background-image:url('images/svc3.jpg')}
+.service-img-5{background-image:url('https://images.unsplash.com/photo-1527515545081-5db817172677?w=600&q=80')}
+.service-img-6{background-image:url('images/svc5.jpg')}
+.service-img-7{background-image:url('images/svc6.jpg')}
 .service-card-body{padding:20px}
 .service-card-body p{font-size:14px;color:#64748b;line-height:1.6;margin-bottom:14px}
 .service-card-footer{display:flex;align-items:center;justify-content:space-between}
@@ -490,67 +496,86 @@ footer ul li a:hover{color:rgba(255,255,255,.85)}
       <h2 class="section-title">Everything Your Home Needs</h2>
       <p class="section-sub">From gutters to full remodels — one company, one call, one standard of excellence. Family-owned & operating in Metro Atlanta since 2018.</p>
     </div>
-    <div class="services-grid">
-      <div class="service-card">
+    <nav class="svc-nav" aria-label="Services">
+      <a href="gutter-cleaning.html" class="svc-tab">🍂 Gutter Cleaning</a>
+      <a href="gutter-guards.html" class="svc-tab">🛡️ Gutter Guards</a>
+      <a href="pressure-washing.html" class="svc-tab">💧 Pressure Washing</a>
+      <a href="soft-washing.html" class="svc-tab">🏠 Soft Washing</a>
+      <a href="window-cleaning.html" class="svc-tab">✨ Window Cleaning</a>
+      <a href="painting.html" class="svc-tab">🎨 Painting</a>
+      <a href="remodeling.html" class="svc-tab">🔨 Remodeling</a>
+    </nav>
+    <div class="services-grid" style="grid-template-columns:repeat(3,1fr)">
+      <a href="gutter-cleaning.html" class="service-card" style="text-decoration:none;color:inherit">
         <div class="service-card-img service-img-1"><span class="service-card-img-label">Gutter Cleaning</span></div>
         <div class="service-card-body">
-          <p>Clogged gutters lead to water damage, wood rot, and cracked foundations. We clear all debris with commercial blowers, flush every downspout, and do a free visual roof inspection — same-week service available.</p>
+          <p>Clogged gutters lead to water damage, wood rot, and cracked foundations. We clear all debris, flush every downspout, and include a free visual roof inspection. Same-week service available.</p>
           <div class="service-card-footer">
             <span class="service-price-badge">From $125</span>
-            <a href="#estimate" class="service-learn">Get Free Estimate →</a>
+            <span class="service-learn">Learn More →</span>
           </div>
         </div>
-      </div>
-      <div class="service-card">
-        <div class="service-card-img service-img-2"><span class="service-card-img-label">Pressure Washing</span></div>
+      </a>
+      <a href="gutter-guards.html" class="service-card" style="text-decoration:none;color:inherit">
+        <div class="service-card-img service-img-2"><span class="service-card-img-label">Gutter Guards</span></div>
         <div class="service-card-body">
-          <p>Years of grime, mold, and stains removed in a single visit. We restore driveways, patios, decks, and sidewalks to like-new condition using commercial-grade equipment. Your curb appeal, transformed.</p>
+          <p>Stop cleaning your gutters every season. We install high-quality gutter guards that block leaves, debris, and pests — especially recommended for homes surrounded by trees.</p>
           <div class="service-card-footer">
             <span class="service-price-badge">Free Quote</span>
-            <a href="#estimate" class="service-learn">Get Free Estimate →</a>
+            <span class="service-learn">Learn More →</span>
           </div>
         </div>
-      </div>
-      <div class="service-card">
-        <div class="service-card-img service-img-3"><span class="service-card-img-label">Soft Washing</span></div>
+      </a>
+      <a href="pressure-washing.html" class="service-card" style="text-decoration:none;color:inherit">
+        <div class="service-card-img service-img-3"><span class="service-card-img-label">Pressure Washing</span></div>
         <div class="service-card-body">
-          <p>High pressure damages siding, stucco, and wood. Our low-pressure soft wash uses professional-grade solutions to eliminate algae, mold, and mildew safely — longer-lasting results without risking your surfaces.</p>
+          <p>Years of grime, mold, and stains removed in a single visit. We restore driveways, patios, decks, and sidewalks to like-new condition using commercial-grade equipment.</p>
           <div class="service-card-footer">
             <span class="service-price-badge">Free Quote</span>
-            <a href="#estimate" class="service-learn">Get Free Estimate →</a>
+            <span class="service-learn">Learn More →</span>
           </div>
         </div>
-      </div>
-      <div class="service-card">
-        <div class="service-card-img service-img-4"><span class="service-card-img-label">Window Cleaning</span></div>
+      </a>
+      <a href="soft-washing.html" class="service-card" style="text-decoration:none;color:inherit">
+        <div class="service-card-img service-img-4"><span class="service-card-img-label">Soft Washing</span></div>
         <div class="service-card-body">
-          <p>Streak-free clarity, inside and out. We clean every pane, frame, and sill using professional tools — all sizes, all heights. Let the light back in the way it's supposed to look.</p>
+          <p>High pressure damages siding, stucco, and wood. Our low-pressure treatment with professional solutions eliminates algae, mold, and mildew safely — longer-lasting results.</p>
           <div class="service-card-footer">
             <span class="service-price-badge">Free Quote</span>
-            <a href="#estimate" class="service-learn">Get Free Estimate →</a>
+            <span class="service-learn">Learn More →</span>
           </div>
         </div>
-      </div>
-      <div class="service-card">
-        <div class="service-card-img service-img-5"><span class="service-card-img-label">Painting</span></div>
+      </a>
+      <a href="window-cleaning.html" class="service-card" style="text-decoration:none;color:inherit">
+        <div class="service-card-img service-img-5"><span class="service-card-img-label">Window Cleaning</span></div>
         <div class="service-card-body">
-          <p>Interior and exterior painting done right the first time. We prep every surface properly, cut clean lines, and apply premium paint that holds up for years. No drips, no shortcuts — just a finish that makes your home look brand new.</p>
+          <p>Streak-free clarity inside and out. We clean every pane, frame, and sill — all sizes and heights. Professional tools, zero streaks, natural light the way it should look.</p>
           <div class="service-card-footer">
             <span class="service-price-badge">Free Quote</span>
-            <a href="#estimate" class="service-learn">Get Free Estimate →</a>
+            <span class="service-learn">Learn More →</span>
           </div>
         </div>
-      </div>
-      <div class="service-card">
-        <div class="service-card-img service-img-6"><span class="service-card-img-label">Remodeling</span></div>
+      </a>
+      <a href="painting.html" class="service-card" style="text-decoration:none;color:inherit">
+        <div class="service-card-img service-img-6"><span class="service-card-img-label">Painting</span></div>
         <div class="service-card-body">
-          <p>Bathrooms, kitchens, flooring, tile, countertops & backsplash — we handle complete transformations from start to finish. No subcontractors, no surprises. Quality craftsmanship backed by a 1-year workmanship warranty.</p>
+          <p>Interior and exterior painting done right the first time. Proper surface prep, clean cut-ins, and premium paint for a finish that holds up for years. No drips, no shortcuts.</p>
           <div class="service-card-footer">
             <span class="service-price-badge">Free Quote</span>
-            <a href="#estimate" class="service-learn">Get Free Estimate →</a>
+            <span class="service-learn">Learn More →</span>
           </div>
         </div>
-      </div>
+      </a>
+      <a href="remodeling.html" class="service-card" style="text-decoration:none;color:inherit;grid-column:span 3;max-width:380px;margin:0 auto;width:100%">
+        <div class="service-card-img service-img-7"><span class="service-card-img-label">Remodeling</span></div>
+        <div class="service-card-body">
+          <p>Bathrooms, kitchens, flooring, tile, countertops & backsplash — complete transformations, no subcontractors, no surprises. 1-year workmanship warranty on every project.</p>
+          <div class="service-card-footer">
+            <span class="service-price-badge">Free Quote</span>
+            <span class="service-learn">Learn More →</span>
+          </div>
+        </div>
+      </a>
     </div>
   </div>
 </section>
