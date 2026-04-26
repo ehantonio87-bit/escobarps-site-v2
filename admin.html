@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EPS — Leads Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center}
+.login-box{background:#fff;border-radius:16px;padding:40px;width:340px;box-shadow:0 8px 32px rgba(0,0,0,.1)}
+.login-logo{text-align:center;margin-bottom:28px}
+.login-logo img{height:52px;width:auto}
+.login-title{font-size:20px;font-weight:800;color:#1a3c5e;text-align:center;margin-bottom:6px}
+.login-sub{font-size:13px;color:#94a3b8;text-align:center;margin-bottom:24px}
+.login-box input{width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:15px;margin-bottom:12px;outline:none;transition:border .2s}
+.login-box input:focus{border-color:#1a3c5e}
+.login-btn{width:100%;background:#1a3c5e;color:#fff;border:none;padding:13px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s}
+.login-btn:hover{background:#0f2640}
+.login-err{color:#ef4444;font-size:13px;text-align:center;margin-top:10px;display:none}
+
+/* APP */
+.app{display:none}
+.topbar{background:#1a3c5e;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+.topbar-logo img{height:38px;width:auto}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.topbar-right span{color:rgba(255,255,255,.6);font-size:13px}
+.logout-btn{background:rgba(255,255,255,.1);color:#fff;border:none;padding:7px 14px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600;transition:background .2s}
+.logout-btn:hover{background:rgba(255,255,255,.2)}
+
+.main{max-width:1100px;margin:0 auto;padding:28px 20px}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.page-title{font-size:22px;font-weight:800;color:#1a3c5e}
+.page-stats{display:flex;gap:12px}
+.stat-chip{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;color:#475569}
+.stat-chip span{color:#1a3c5e;font-weight:800;font-size:15px;display:block}
+
+.filters{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.filter-btn{padding:7px 16px;border-radius:20px;border:1.5px solid #e2e8f0;background:#fff;font-size:13px;font-weight:600;color:#64748b;cursor:pointer;transition:all .2s}
+.filter-btn.active{background:#1a3c5e;color:#fff;border-color:#1a3c5e}
+.search-input{padding:7px 14px;border:1.5px solid #e2e8f0;border-radius:20px;font-size:13px;outline:none;min-width:200px;transition:border .2s}
+.search-input:focus{border-color:#1a3c5e}
+
+.leads-grid{display:grid;gap:12px}
+.lead-card{background:#fff;border-radius:12px;padding:18px 20px;border:1.5px solid #e2e8f0;cursor:pointer;transition:all .2s;display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center}
+.lead-card:hover{border-color:#1a3c5e;box-shadow:0 4px 16px rgba(26,60,94,.1);transform:translateY(-1px)}
+.lead-card.status-new{border-left:4px solid #f97316}
+.lead-card.status-contacted{border-left:4px solid #3b82f6}
+.lead-card.status-quoted{border-left:4px solid #8b5cf6}
+.lead-card.status-done{border-left:4px solid #22c55e}
+
+.lead-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#1a3c5e,#2563eb);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0}
+.lead-name{font-size:15px;font-weight:700;color:#1e293b;margin-bottom:3px}
+.lead-meta{font-size:13px;color:#64748b;display:flex;gap:14px;flex-wrap:wrap}
+.lead-meta strong{color:#1e293b}
+.lead-right{text-align:right;flex-shrink:0}
+.lead-date{font-size:12px;color:#94a3b8;margin-bottom:6px}
+.status-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.badge-new{background:#fff7ed;color:#f97316}
+.badge-contacted{background:#eff6ff;color:#3b82f6}
+.badge-quoted{background:#f5f3ff;color:#8b5cf6}
+.badge-done{background:#f0fdf4;color:#22c55e}
+
+.empty-state{text-align:center;padding:60px 20px;color:#94a3b8}
+.empty-icon{font-size:48px;margin-bottom:12px}
+.empty-state p{font-size:15px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-header{padding:24px 24px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.modal-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#1a3c5e,#2563eb);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0}
+.modal-name{font-size:20px;font-weight:800;color:#1e293b;margin-bottom:4px}
+.modal-service{font-size:13px;color:#f97316;font-weight:700}
+.modal-close{width:32px;height:32px;border-radius:50%;background:#f1f5f9;border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b;flex-shrink:0}
+.modal-close:hover{background:#e2e8f0}
+.modal-body{padding:20px 24px 24px}
+.detail-row{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid #f1f5f9}
+.detail-row:last-of-type{border-bottom:none}
+.detail-icon{width:36px;height:36px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.detail-label{font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.detail-value{font-size:15px;font-weight:600;color:#1e293b}
+.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.modal-actions a,.modal-actions button{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;border:none}
+.btn-call{background:#22c55e;color:#fff}
+.btn-call:hover{background:#16a34a}
+.btn-email{background:#3b82f6;color:#fff}
+.btn-email:hover{background:#2563eb}
+.status-actions{margin-top:12px}
+.status-label{font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.status-btns{display:flex;gap:8px;flex-wrap:wrap}
+.status-btn{padding:7px 14px;border-radius:20px;border:1.5px solid #e2e8f0;background:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
+.status-btn:hover,.status-btn.active{color:#fff}
+.status-btn[data-s="new"]:hover,.status-btn[data-s="new"].active{background:#f97316;border-color:#f97316}
+.status-btn[data-s="contacted"]:hover,.status-btn[data-s="contacted"].active{background:#3b82f6;border-color:#3b82f6}
+.status-btn[data-s="quoted"]:hover,.status-btn[data-s="quoted"].active{background:#8b5cf6;border-color:#8b5cf6}
+.status-btn[data-s="done"]:hover,.status-btn[data-s="done"].active{background:#22c55e;border-color:#22c55e}
+
+.loading{text-align:center;padding:40px;color:#94a3b8;font-size:15px}
+
+@media(max-width:600px){
+  .lead-card{grid-template-columns:auto 1fr;gap:12px}
+  .lead-right{display:none}
+  .modal-actions{grid-template-columns:1fr}
+  .page-stats{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">
+      <img src="images/logo.jpg" alt="EPS">
+    </div>
+    <div class="login-title">Leads Panel</div>
+    <div class="login-sub">Enter your password to continue</div>
+    <input type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-err" id="loginErr">Incorrect password</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="topbar-logo"><img src="images/logo.jpg" alt="EPS"></div>
+    <div class="topbar-right">
+      <span>Leads Dashboard</span>
+      <button class="logout-btn" onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title">All Leads</div>
+      </div>
+      <div class="page-stats">
+        <div class="stat-chip"><span id="statTotal">—</span>Total</div>
+        <div class="stat-chip"><span id="statNew">—</span>New</div>
+        <div class="stat-chip"><span id="statDone">—</span>Completed</div>
+      </div>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setFilter('new',this)">🔴 New</button>
+      <button class="filter-btn" onclick="setFilter('contacted',this)">🔵 Contacted</button>
+      <button class="filter-btn" onclick="setFilter('quoted',this)">🟣 Quoted</button>
+      <button class="filter-btn" onclick="setFilter('done',this)">🟢 Done</button>
+      <input class="search-input" type="text" placeholder="Search name or phone..." id="searchInput" oninput="renderLeads()">
+    </div>
+
+    <div class="leads-grid" id="leadsGrid">
+      <div class="loading">Loading leads...</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div style="display:flex;gap:14px;align-items:center">
+        <div class="modal-avatar" id="mAvatar"></div>
+        <div>
+          <div class="modal-name" id="mName"></div>
+          <div class="modal-service" id="mService"></div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-row">
+        <div class="detail-icon">📞</div>
+        <div>
+          <div class="detail-label">Phone</div>
+          <div class="detail-value" id="mPhone"></div>
+        </div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-icon">✉️</div>
+        <div>
+          <div class="detail-label">Email</div>
+          <div class="detail-value" id="mEmail"></div>
+        </div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-icon">🗒️</div>
+        <div>
+          <div class="detail-label">Notes</div>
+          <div class="detail-value" id="mNotes"></div>
+        </div>
+      </div>
+      <div class="detail-row">
+        <div class="detail-icon">📅</div>
+        <div>
+          <div class="detail-label">Submitted</div>
+          <div class="detail-value" id="mDate"></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <a id="mCallBtn" class="btn-call" href="">📞 Call Now</a>
+        <a id="mEmailBtn" class="btn-email" href="">✉️ Send Email</a>
+      </div>
+      <div class="status-actions">
+        <div class="status-label">Mark as</div>
+        <div class="status-btns">
+          <button class="status-btn" data-s="new" onclick="setStatus('new')">🔴 New</button>
+          <button class="status-btn" data-s="contacted" onclick="setStatus('contacted')">🔵 Contacted</button>
+          <button class="status-btn" data-s="quoted" onclick="setStatus('quoted')">🟣 Quoted</button>
+          <button class="status-btn" data-s="done" onclick="setStatus('done')">🟢 Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PASSWORD = 'eps2024admin';
+const SUPABASE_URL = 'https://ejwlfxrdzwmtejosuyvi.supabase.co';
+const SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqd2xmeHJkendtdGVqb3N1eXZpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTIzNTI4NiwiZXhwIjoyMDkwODExMjg2fQ.e06rWSO82xmQ6b8xOxAW6S4wg9G3XqLxRW0J7fS_3-A';
+
+let allLeads = [];
+let currentFilter = 'all';
+let currentLead = null;
+
+// ── AUTH ──
+function doLogin() {
+  const pw = document.getElementById('pwInput').value;
+  if (pw === PASSWORD) {
+    sessionStorage.setItem('eps_auth', '1');
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadLeads();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+  }
+}
+function doLogout() {
+  sessionStorage.removeItem('eps_auth');
+  location.reload();
+}
+if (sessionStorage.getItem('eps_auth')) {
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadLeads();
+}
+
+// ── LOAD ──
+async function loadLeads() {
+  const res = await fetch(SUPABASE_URL + '/rest/v1/eps_leads?select=*&order=created_at.desc', {
+    headers: {
+      'apikey': SERVICE_KEY,
+      'Authorization': 'Bearer ' + SERVICE_KEY
+    }
+  });
+  allLeads = await res.json();
+  updateStats();
+  renderLeads();
+}
+
+function updateStats() {
+  document.getElementById('statTotal').textContent = allLeads.length;
+  document.getElementById('statNew').textContent = allLeads.filter(l => !l.status || l.status === 'new').length;
+  document.getElementById('statDone').textContent = allLeads.filter(l => l.status === 'done').length;
+}
+
+// ── RENDER ──
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLeads();
+}
+
+function renderLeads() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  let leads = allLeads.filter(l => {
+    if (currentFilter !== 'all') {
+      const s = l.status || 'new';
+      if (s !== currentFilter) return false;
+    }
+    if (search) {
+      const hay = (l.name + l.phone + l.email + l.service).toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  const grid = document.getElementById('leadsGrid');
+  if (leads.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>No leads found</p></div>';
+    return;
+  }
+
+  grid.innerHTML = leads.map(l => {
+    const status = l.status || 'new';
+    const badgeClass = 'badge-' + status;
+    const initial = (l.name || '?')[0].toUpperCase();
+    const date = l.created_at ? new Date(l.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
+    const badges = {new:'New',contacted:'Contacted',quoted:'Quoted',done:'Done'};
+    return `<div class="lead-card status-${status}" onclick="openLead('${l.id}')">
+      <div class="lead-avatar">${initial}</div>
+      <div>
+        <div class="lead-name">${l.name || 'Unknown'}</div>
+        <div class="lead-meta">
+          <span>📞 <strong>${l.phone || '—'}</strong></span>
+          <span>🔧 ${l.service || 'Not specified'}</span>
+          ${l.email ? `<span>✉️ ${l.email}</span>` : ''}
+        </div>
+      </div>
+      <div class="lead-right">
+        <div class="lead-date">${date}</div>
+        <div class="status-badge ${badgeClass}">${badges[status]}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── MODAL ──
+function openLead(id) {
+  currentLead = allLeads.find(l => l.id == id);
+  if (!currentLead) return;
+  const l = currentLead;
+  const status = l.status || 'new';
+  const date = l.created_at ? new Date(l.created_at).toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
+
+  document.getElementById('mAvatar').textContent = (l.name||'?')[0].toUpperCase();
+  document.getElementById('mName').textContent = l.name || 'Unknown';
+  document.getElementById('mService').textContent = l.service || 'Service not specified';
+  document.getElementById('mPhone').textContent = l.phone || '—';
+  document.getElementById('mEmail').textContent = l.email || 'Not provided';
+  document.getElementById('mNotes').textContent = l.message || l.notes || 'No additional notes';
+  document.getElementById('mDate').textContent = date;
+  document.getElementById('mCallBtn').href = 'tel:' + (l.phone||'').replace(/\D/g,'');
+  document.getElementById('mEmailBtn').href = 'mailto:' + (l.email||'info@escobarps.com');
+
+  document.querySelectorAll('.status-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.s === status);
+  });
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+}
+
+async function setStatus(status) {
+  if (!currentLead) return;
+  await fetch(SUPABASE_URL + '/rest/v1/eps_leads?id=eq.' + currentLead.id, {
+    method: 'PATCH',
+    headers: {
+      'apikey': SERVICE_KEY,
+      'Authorization': 'Bearer ' + SERVICE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify({ status })
+  });
+  currentLead.status = status;
+  allLeads = allLeads.map(l => l.id === currentLead.id ? {...l, status} : l);
+  document.querySelectorAll('.status-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.s === status);
+  });
+  updateStats();
+  renderLeads();
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+</script>
+</body>
+</html>
