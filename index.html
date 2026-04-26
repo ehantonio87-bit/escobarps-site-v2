@@ -878,23 +878,39 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   });
 });
 
-// Lead form → Supabase
+// Lead form → Supabase (storage) + Formsubmit (email to info@escobarps.com)
 document.getElementById('leadForm').addEventListener('submit',async e=>{
   e.preventDefault();
   const btn=e.target.querySelector('.btn-submit');
   btn.textContent='Sending...';btn.disabled=true;
   const fd=new FormData(e.target);
+  const lead={name:fd.get('name'),phone:fd.get('phone'),email:fd.get('email')||'',service:fd.get('service'),message:fd.get('message')||''};
   try{
-    await fetch('https://ejwlfxrdzwmtejosuyvi.supabase.co/rest/v1/eps_leads',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqd2xmeHJkendtdGVqb3N1eXZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyMzUyODYsImV4cCI6MjA5MDgxMTI4Nn0.ZRDtzHZbuiIK07H3QFlQc8-XcF5e3KctSpFDAkbr6Fk',
-        'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqd2xmeHJkendtdGVqb3N1eXZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyMzUyODYsImV4cCI6MjA5MDgxMTI4Nn0.ZRDtzHZbuiIK07H3QFlQc8-XcF5e3KctSpFDAkbr6Fk',
-        'Prefer':'return=minimal'
-      },
-      body:JSON.stringify({name:fd.get('name'),phone:fd.get('phone'),email:fd.get('email')||'',service:fd.get('service'),message:fd.get('message')||''})
-    });
+    await Promise.all([
+      fetch('https://ejwlfxrdzwmtejosuyvi.supabase.co/rest/v1/eps_leads',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqd2xmeHJkendtdGVqb3N1eXZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyMzUyODYsImV4cCI6MjA5MDgxMTI4Nn0.ZRDtzHZbuiIK07H3QFlQc8-XcF5e3KctSpFDAkbr6Fk',
+          'Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqd2xmeHJkendtdGVqb3N1eXZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyMzUyODYsImV4cCI6MjA5MDgxMTI4Nn0.ZRDtzHZbuiIK07H3QFlQc8-XcF5e3KctSpFDAkbr6Fk',
+          'Prefer':'return=minimal'
+        },
+        body:JSON.stringify(lead)
+      }),
+      fetch('https://formsubmit.co/ajax/info@escobarps.com',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify({
+          _subject:'🔔 New Lead - EPS Website',
+          _template:'table',
+          name:lead.name,
+          phone:lead.phone,
+          email:lead.email||'Not provided',
+          service:lead.service||'Not specified',
+          notes:lead.message||'—'
+        })
+      })
+    ]);
     e.target.style.display='none';
     document.getElementById('formSuccess').style.display='block';
   }catch(err){
