@@ -112,6 +112,7 @@ footer{background:#0f1e37;color:rgba(255,255,255,.7);padding:40px 0 20px}
   .float-btns{bottom:16px;right:16px}
 }
 </style>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 
@@ -211,11 +212,11 @@ footer{background:#0f1e37;color:rgba(255,255,255,.7);padding:40px 0 20px}
             </div>
             <div class="field">
               <label>Email</label>
-              <input type="email" name="email" placeholder="you@email.com">
+              <input type="email" name="email" placeholder="you@email.com" required>
             </div>
             <div class="field">
               <label>Service</label>
-              <select name="service">
+              <select name="service" required>
                 <option value="Exterior Painting" selected>Interior & Exterior Painting</option>
                 <option>Gutter Cleaning — From $125</option>
                 <option>Gutter Guard Installation</option>
@@ -230,8 +231,9 @@ footer{background:#0f1e37;color:rgba(255,255,255,.7);padding:40px 0 20px}
             </div>
             <div class="field">
               <label>Property Address / Notes</label>
-              <textarea name="message" placeholder="Street address or notes about your project..."></textarea>
+              <textarea name="message" placeholder="Street address or notes about your project..." required></textarea>
             </div>
+            <div style="margin:14px 0"><div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div></div>
             <button type="submit" class="btn-submit">Get My Free Estimate →</button>
             <p class="form-note">🔒 No spam. We'll call or text you shortly.</p>
           </form>
@@ -274,6 +276,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 document.getElementById('leadForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   const btn = this.querySelector('button[type=submit]');
+  if(!grecaptcha.getResponse()){alert('Please confirm you're not a robot.');return;}
   btn.textContent = 'Sending...'; btn.disabled = true;
   const lead = Object.fromEntries(new FormData(this));
   try {
